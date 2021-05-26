@@ -14,6 +14,8 @@ type Controller struct {
 func New() *Controller {
 	c := &Controller{
 		broadcaster: broadcast.New(),
+		allow:       true,
+		exitVal:     0,
 	}
 	return c
 }

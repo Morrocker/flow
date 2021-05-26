@@ -1,4 +1,4 @@
-module github.com/morrocker/flow-controller
+module github.com/morrocker/flow
 
 go 1.16
 

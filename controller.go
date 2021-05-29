@@ -5,14 +5,21 @@ import "github.com/morrocker/broadcast"
 // type Gate struct{
 
 // }
-type Controller struct {
+type Controller interface {
+	Checkpoint() int
+	Stop()
+	Go()
+	Exit(int)
+}
+
+type ControlTower struct {
 	broadcaster *broadcast.Broadcaster
 	allow       bool
 	exitVal     int
 }
 
-func New() *Controller {
-	c := &Controller{
+func New() Controller {
+	c := &ControlTower{
 		broadcaster: broadcast.New(),
 		allow:       true,
 		exitVal:     0,
@@ -20,7 +27,7 @@ func New() *Controller {
 	return c
 }
 
-func (c *Controller) Checkpoint() int {
+func (c *ControlTower) Checkpoint() int {
 	l := c.broadcaster.Listen()
 	for {
 		if c.allow {
@@ -31,17 +38,17 @@ func (c *Controller) Checkpoint() int {
 	}
 }
 
-func (c *Controller) Stop() {
+func (c *ControlTower) Stop() {
 	c.allow = false
 }
 
-func (c *Controller) Go() {
+func (c *ControlTower) Go() {
 	c.allow = true
 	c.exitVal = 0
 	c.broadcaster.Broadcast()
 }
 
-func (c *Controller) Exit(n int) {
+func (c *ControlTower) Exit(n int) {
 	c.allow = true
 	c.exitVal = n
 	c.broadcaster.Broadcast()
